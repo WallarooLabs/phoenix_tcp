@@ -44,14 +44,16 @@ defmodule PhoenixTCP.RanchServer do
               transport_config: opts,
               timeout: timeout
             }
-            :ok = tcp_transport.setopts(tcp_socket, [:binary, active: :once, packet: 4])
+            :ok = tcp_transport.setopts(tcp_socket, [active: :once])
             {:noreply, state, timeout}
           {:error, error_msg} ->
-            tcp_transport.send(tcp_socket, error_msg <> "\r\n")
+            tcp_transport.send(tcp_socket, error_msg)
+            :ok = tcp_transport.setopts(tcp_socket, [active: :once])
             {:noreply, state}
         end
       nil ->
-        tcp_transport.send(tcp_socket, "no path matches\r\n")
+        tcp_transport.send(tcp_socket, "no path matches")
+        :ok = tcp_transport.setopts(tcp_socket, [active: :once])
         {:noreply, state}
     end
   end
@@ -101,8 +103,7 @@ defmodule PhoenixTCP.RanchServer do
   defp handle_reply(%{timeout: timeout, tcp_transport: transport, tcp_socket: socket} = state, 
       {:reply, {_encoding, encoded_payload}, new_config}) do
     transport.send(socket, encoded_payload)
-    transport.send(socket, "\r\n")
-    :ok = transport.setopts(socket, [:binary, active: :once, packet: 4])
+    :ok = transport.setopts(socket, [active: :once])
     new_state = Map.put(state, :transport_config, new_config)
     {:noreply, new_state, timeout}
   end
