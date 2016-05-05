@@ -19,7 +19,10 @@ use Mix.Config
 # Or configure a 3rd-party app:
 #
 #     config :logger, level: :info
-#
+	config :logger, :console, format: "$message",
+      colors: [enabled: false]
+
+    config :phoenix, :filter_parameters, ["password", "secret"]
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment
