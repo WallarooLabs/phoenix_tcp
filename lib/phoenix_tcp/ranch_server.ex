@@ -45,13 +45,17 @@ defmodule PhoenixTCP.RanchServer do
               timeout: timeout
             }
             :ok = tcp_transport.setopts(tcp_socket, [active: :once])
+            connected_msg = Poison.encode!(%{"payload" => %{"status" => "ok", "response" => "connected"}})
+            tcp_transport.send(tcp_socket, connected_msg)
             {:noreply, state, timeout}
           {:error, error_msg} ->
-            tcp_transport.send(tcp_socket, error_msg)
+            status_error_msg = Poison.encode!(%{"payload" => %{"status" => "error", "response" => error_msg}})
+            tcp_transport.send(tcp_socket, status_error_msg)
             :ok = tcp_transport.setopts(tcp_socket, [active: :once])
             {:noreply, state}
         end
       nil ->
+        error_msg = Poison.encode!(%{"payload" => %{"status" => "error", "response" => "no path matches"}})
         tcp_transport.send(tcp_socket, "no path matches")
         :ok = tcp_transport.setopts(tcp_socket, [active: :once])
         {:noreply, state}
