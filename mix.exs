@@ -3,7 +3,7 @@ defmodule PhoenixTCP.Mixfile do
 
   def project do
     [app: :phoenix_tcp,
-     version: "0.0.1a",
+     version: "0.0.1",
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
