@@ -1,4 +1,11 @@
-%{"phoenix": {:hex, :phoenix, "1.1.4"},
-  "plug": {:hex, :plug, "1.1.4"},
-  "poison": {:hex, :poison, "1.5.2"},
-  "ranch": {:hex, :ranch, "1.2.1"}}
+%{"bbmustache": {:hex, :bbmustache, "1.0.4", "7ba94f971c5afd7b6617918a4bb74705e36cab36eb84b19b6a1b7ee06427aa38", [:rebar], []},
+  "cf": {:hex, :cf, "0.2.1", "69d0b1349fd4d7d4dc55b7f407d29d7a840bf9a1ef5af529f1ebe0ce153fc2ab", [:rebar3], []},
+  "erlware_commons": {:hex, :erlware_commons, "0.19.0", "7b43caf2c91950c5f60dc20451e3c3afba44d3d4f7f27bcdc52469285a5a3e70", [:rebar3], [{:cf, "0.2.1", [hex: :cf, optional: false]}]},
+  "exrm": {:hex, :exrm, "1.0.5", "53ecb20da2f4e5b4c82ea6776824fbc677c8d287bf20efc9fc29cacc2cca124f", [:mix], [{:relx, "~> 3.5", [hex: :relx, optional: false]}]},
+  "getopt": {:hex, :getopt, "0.8.2", "b17556db683000ba50370b16c0619df1337e7af7ecbf7d64fbf8d1d6bce3109b", [:rebar], []},
+  "phoenix": {:hex, :phoenix, "1.1.4", "65809fba92eb94377372a5fb5a561197654bb8406e773cc47ca1a031bbe58019", [:mix], [{:poison, "~> 1.5 or ~> 2.0", [hex: :poison, optional: false]}, {:plug, "~> 1.0", [hex: :plug, optional: false]}, {:cowboy, "~> 1.0", [hex: :cowboy, optional: true]}]},
+  "plug": {:hex, :plug, "1.1.4", "2eee0e85ad420db96e075b3191d3764d6fff61422b101dc5b02e9cce99cacfc7", [:mix], [{:cowboy, "~> 1.0", [hex: :cowboy, optional: true]}]},
+  "poison": {:hex, :poison, "1.5.2", "560bdfb7449e3ddd23a096929fb9fc2122f709bcc758b2d5d5a5c7d0ea848910", [:mix], []},
+  "providers": {:hex, :providers, "1.6.0", "db0e2f9043ae60c0155205fcd238d68516331d0e5146155e33d1e79dc452964a", [:rebar3], [{:getopt, "0.8.2", [hex: :getopt, optional: false]}]},
+  "ranch": {:hex, :ranch, "1.2.1", "a6fb992c10f2187b46ffd17ce398ddf8a54f691b81768f9ef5f461ea7e28c762", [:make], []},
+  "relx": {:hex, :relx, "3.19.0", "286dd5244b4786f56aac75d5c8e2d1fb4cfd306810d4ec8548f3ae1b3aadb8f7", [:rebar3], [{:providers, "1.6.0", [hex: :providers, optional: false]}, {:getopt, "0.8.2", [hex: :getopt, optional: false]}, {:erlware_commons, "0.19.0", [hex: :erlware_commons, optional: false]}, {:cf, "0.2.1", [hex: :cf, optional: false]}, {:bbmustache, "1.0.4", [hex: :bbmustache, optional: false]}]}}

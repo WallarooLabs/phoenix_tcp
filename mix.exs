@@ -14,7 +14,7 @@ defmodule PhoenixTCP.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :ranch]]
+    [applications: [:logger, :ranch, :phoenix, :poison]]
   end
 
   # Dependencies can be Hex packages:
@@ -29,6 +29,7 @@ defmodule PhoenixTCP.Mixfile do
   defp deps do
     [{:ranch, "~> 1.0", manager: :rebar},
      {:poison, "~> 1.5"},
-     {:phoenix, "~> 1.1.4"}]
+     {:phoenix, "~> 1.1.4"},
+     {:exrm, "~> 1.0.0"}]
   end
 end
