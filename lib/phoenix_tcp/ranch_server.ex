@@ -3,6 +3,8 @@ defmodule PhoenixTCP.RanchServer do
   require Logger
   require IEx
 
+  alias PhoenixTCP.Serializers.HubProtocol
+
   @behavious :ranch_protocol
 
   def start_link(ref, tcp_socket, tcp_transport, opts \\ []) do
@@ -22,9 +24,7 @@ defmodule PhoenixTCP.RanchServer do
   end
 
   def handle_info({:tcp, tcp_socket, data}, %{handlers: handlers, tcp_transport: tcp_transport} = state) do
-    %{"path" => path, "params" => params} =
-      String.rstrip(data)
-      |> Poison.decode!()
+    %{"path" => path, "params" => params} = HubProtocol.decode!(data)
     case Map.get(handlers, path) do
       # handler is the server which handles the tcp messages
       # currently there is only one server, 
