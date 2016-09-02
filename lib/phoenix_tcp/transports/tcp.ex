@@ -33,7 +33,7 @@ defmodule PhoenixTCP.Transports.TCP do
   @behaviour Phoenix.Socket.Transport
 
   def default_config() do
-    [serializer: Phoenix.Transports.WebSocketSerializer,
+    [serializer: PhoenixTCP.Transports.TCPSerializer,
     timeout: 60_000,
     transport_log: false]
   end
