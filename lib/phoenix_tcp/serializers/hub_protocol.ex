@@ -15,7 +15,7 @@ defmodule PhoenixTCP.Serializers.HubProtocol do
 		}
 	end
 
-  def decode!(<< 2 :: size(8), topic_size :: size(16),
+  def decode!(<< 2 :: size(8), topic_size :: size(32),
     topic :: binary-size(topic_size) >> = _iodata)
   do
     %{
@@ -26,9 +26,10 @@ defmodule PhoenixTCP.Serializers.HubProtocol do
     }
   end
 
-  def decode!(<<3 :: size(8), event_size :: size(16), 
-    event :: binary-size(event_size), topic_size :: size(16),
-    topic :: binary-size(topic_size), payload :: binary>> = _iodata)
+  def decode!(<< 3 :: size(8), event_size :: size(32), 
+    event :: binary-size(event_size), topic_size :: size(32),
+    topic :: binary-size(topic_size), payload_size :: size(32),
+    payload :: binary>> = _iodata)
   do
     %{
       "event" => event,
@@ -59,7 +60,7 @@ defmodule PhoenixTCP.Serializers.HubProtocol do
       "price" => price,
       "bid" => bid,
       "offer" => offer,
-      "timestamp" => timestamp
+      "timestamp" => round(timestamp / 1000000000)
     }
   end
 
@@ -121,7 +122,8 @@ defmodule PhoenixTCP.Serializers.HubProtocol do
       "min" => min_val,
       "max" => max_val,
       "period" => period,
-      "timestamp" => timestamp
+      "period" => round(period / 1000000000),
+      "timestamp" => round(timestamp / 1000000000)
     }
   end
 
