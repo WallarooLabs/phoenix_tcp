@@ -99,8 +99,10 @@ defmodule PhoenixTCP.RanchServer do
     {:stop, :shutdown, new_state}
   end
 
-  defp handle_reply(%{timeout: timeout} = state, {:ok, new_config}) do
+  defp handle_reply(%{timeout: timeout, tcp_transport: transport, 
+    tcp_socket: socket} = state, {:ok, new_config}) do
     new_state = Map.put(state, :transport_config, new_config)
+    :ok = transport.setopts(socket, [active: :once])
     {:noreply, new_state, timeout}
   end
 
