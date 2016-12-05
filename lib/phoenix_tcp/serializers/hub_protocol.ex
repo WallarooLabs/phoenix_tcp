@@ -247,7 +247,7 @@ defmodule PhoenixTCP.Serializers.HubProtocol do
     >>)
   do
     %{
-      "name" => pipeline_name <> "@" <> worker_name,
+      "name" => pipeline_name <> "*" <> worker_name,
       "category" => "node-ingress-egress",
       "worker" => worker_name,
       "pipeline" => pipeline_name,
