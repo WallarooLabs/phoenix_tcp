@@ -26,6 +26,20 @@ defmodule PhoenixTCP.Serializers.HubProtocol do
     }
   end
 
+  def decode!(<< 2 :: size(8), topic_size :: size(32),
+    topic :: binary-size(topic_size), worker_name_size :: size(32),
+    worker_name :: binary-size(worker_name_size) >> = _iodata)
+  do
+    %{
+      "event" => "phx_join",
+      "topic" => topic,
+      "ref" => nil,
+      "payload" => %{
+        "worker_name" => worker_name
+      }
+    }
+  end
+
   def decode!(<< 3 :: size(8), event_size :: size(32),
     event :: binary-size(event_size), topic_size :: size(32),
     topic :: binary-size(topic_size), payload_size :: size(32),
