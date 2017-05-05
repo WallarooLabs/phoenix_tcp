@@ -131,7 +131,7 @@ defmodule PhoenixTCP.Serializers.HubProtocol do
     >>)
   do
     %{
-      "name" => pipeline_name <> "@" <> worker_name <> ": " <> to_string(id) <> " - " <> name,
+      "name" => pipeline_name <> "@" <> worker_name <> ":" <> name,
       "category" => "computation",
       "worker" => worker_name,
       "pipeline" => pipeline_name,
