@@ -11,7 +11,7 @@ defmodule PhoenixTCP.RanchHandler do
       {transport, {module, config}} <- socket.__transports__,
       # allow handlers to be configured at the transport level
       transport == :tcp,
-      handler = config[:tcp] || default_for(module),
+      handler = config[:tcp_server] || default_for(module),
       into: %{},
       do: {Path.join(path, Atom.to_string(transport)),
            # handler being the tcp protocol implementing module
