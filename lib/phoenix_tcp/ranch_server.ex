@@ -2,7 +2,7 @@ defmodule PhoenixTCP.RanchServer do
 	use GenServer
   require Logger
 
-  @behavious :ranch_protocol
+  @behaviour :ranch_protocol
 
   def start_link(ref, tcp_socket, tcp_transport, opts \\ []) do
     :proc_lib.start_link(__MODULE__, :init, [ref, tcp_socket, tcp_transport, opts])
