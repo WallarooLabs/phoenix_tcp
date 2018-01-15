@@ -4,10 +4,10 @@ defmodule PhoenixTCP.Mixfile do
   def project do
     [app: :phoenix_tcp,
      version: "0.0.1",
-     elixir: "~> 1.2",
+     elixir: "~> 1.5.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps]
+     deps: deps()]
   end
 
   # Configuration for the OTP application
@@ -28,8 +28,7 @@ defmodule PhoenixTCP.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:ranch, "~> 1.0", manager: :rebar},
-     {:poison, "~> 1.5"},
-     {:phoenix, "~> 1.1.4"},
-     {:exrm, "~> 1.0.0"}]
+     {:poison, "~> 3.1.0"},
+     {:phoenix, "~> 1.3.0"}]
   end
 end

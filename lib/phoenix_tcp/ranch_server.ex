@@ -44,7 +44,7 @@ defmodule PhoenixTCP.RanchServer do
                   timeout: timeout
                 }
                 :ok = tcp_transport.setopts(tcp_socket, [active: :once])
-                connected_msg = serializer.encode!(connected_json)
+                connected_msg = serializer.encode!(connected_json())
                 tcp_transport.send(tcp_socket, connected_msg)
                 {:noreply, state, timeout}
               {:error, error_msg} ->

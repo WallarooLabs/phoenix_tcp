@@ -13,11 +13,13 @@ defmodule PhoenixTCP.Supervisor do
 		children = []
 
 		handler = endpoint.config(:tcp_handler)
-
-		if config = endpoint.config(:tcp) do
-			config = default(config, otp_app, 5001)
-			children = [handler.child_spec(:tcp, endpoint, config) | children]
-		end
+		config =
+		  if endpoint.config(:tcp) do
+		    endpoint.config(:tcp)
+		  else
+		    default(Keyword.new(), otp_app, 5001)
+		  end
+		children = [handler.child_spec(:tcp, endpoint, config) | children]
 
 		supervise(children, strategy: :one_for_one)
 	end

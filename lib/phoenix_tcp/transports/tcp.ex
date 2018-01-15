@@ -14,7 +14,7 @@ defmodule PhoenixTCP.Transports.TCP do
 
     * `:timeout` - the timeout for keeping tcp connections
       open after it last received data, defaults to 60_000ms
-    
+
     * `:transport_log` - if the transport layer itself should log, and, if so, the level
 
     * `:serializer` - the serializer for tcp messages
@@ -34,7 +34,7 @@ defmodule PhoenixTCP.Transports.TCP do
 
   def default_config() do
     [serializer: Phoenix.Transports.WebSocketSerializer,
-    timeout: 60_000,
+    timeout: 200_000,
     transport_log: false]
   end
 
@@ -63,11 +63,11 @@ defmodule PhoenixTCP.Transports.TCP do
     serializer = Keyword.fetch!(config, :serializer)
     timeout    = Keyword.fetch!(config, :timeout)
 
-    if socket.id, do: socket.endpoint.subscribe(self, socket.id, link: true)
+    if socket.id, do: socket.endpoint.subscribe(self(), socket.id, link: true)
 
     {:ok, %{socket: socket,
-            channels: HashDict.new,
-            channels_inverse: HashDict.new,
+            channels: %{},
+            channels_inverse: %{},
             serializer: serializer}, timeout}
   end
 
@@ -80,7 +80,7 @@ defmodule PhoenixTCP.Transports.TCP do
       {:reply, reply_msg} ->
         encode_reply(reply_msg, state)
       {:joined, channel_pid, reply_msg} ->
-        encode_reply(reply_msg, put(state, msg.topic, channel_pid))
+        encode_reply(reply_msg, put(state, msg.topic, msg.ref, channel_pid))
       {:error, _reason, error_reply_msg} ->
         encode_reply(error_reply_msg, state)
     end
@@ -88,15 +88,20 @@ defmodule PhoenixTCP.Transports.TCP do
 
   @doc false
   def tcp_info({:EXIT, channel_pid, reason}, state) do
-    case HashDict.get(state.channels_inverse, channel_pid) do
+    case Map.get(state.channels_inverse, channel_pid) do
       nil -> {:ok, state}
-      topic ->
+      {topic, join_ref} ->
         new_state = delete(state, topic, channel_pid)
-        encode_reply Transport.on_exit_message(topic, reason), new_state
+        encode_reply(Transport.on_exit_message(topic, join_ref, reason), new_state)
     end
   end
 
-  @doc false 
+  def tcp_info({:graceful_exit, channel_pid, %Phoenix.Socket.Message{} = msg}, state) do
+    new_state = delete(state, msg.topic, channel_pid)
+    encode_reply(msg, new_state)
+  end
+
+  @doc false
   def tcp_info(%Broadcast{event: "disconnect"}, state) do
     {:shutdown, state}
   end
@@ -120,13 +125,13 @@ defmodule PhoenixTCP.Transports.TCP do
     {:reply, {encoding, encoded_payload}, state}
   end
 
-  defp put(state, topic, channel_pid) do
-    %{state | channels: HashDict.put(state.channels, topic, channel_pid),
-              channels_inverse: HashDict.put(state.channels_inverse, channel_pid, topic)}
+  defp put(state, topic, join_ref, channel_pid) do
+    %{state | channels: Map.put(state.channels, topic, channel_pid),
+              channels_inverse: Map.put(state.channels_inverse, channel_pid, {topic, join_ref})}
   end
 
   defp delete(state, topic, channel_pid) do
-    %{state | channels: HashDict.delete(state.channels, topic),
-              channels_inverse: HashDict.delete(state.channels_inverse, channel_pid)}
+    %{state | channels: Map.delete(state.channels, topic),
+              channels_inverse: Map.delete(state.channels_inverse, channel_pid)}
   end
 end

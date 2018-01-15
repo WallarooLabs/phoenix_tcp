@@ -25,7 +25,6 @@ defmodule PhoenixTCP.Adapters.Ranch do
     :ranch.child_spec(ref, nb_acceptors, ranch_module, trans_opts, tcp_server, proto_opts)
   end
 
-  @tcp_ranch_options [port: 5001]
   @protocol_options []
 
   defp to_args(all_opts) do

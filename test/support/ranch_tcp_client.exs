@@ -12,13 +12,13 @@ defmodule PhoenixTCP.RanchTCPClient do
   end
 
   def init(sender, host, port, path, params) do
-    :ok = :proc_lib.init_ack({:ok, self})
+    :ok = :proc_lib.init_ack({:ok, self()})
     opts = [:binary, active: false]
     connect_msg = %{"path" => path, "params" => params}
-    {:ok, tcp_socket} = :ranch_tcp.connect(String.to_char_list(host), port, opts)
+    {:ok, tcp_socket} = :ranch_tcp.connect(String.to_charlist(host), port, opts)
     :ok = :ranch_tcp.setopts(tcp_socket, [packet: 4])
     :ok = :ranch_tcp.send(tcp_socket, json!(connect_msg))
-    :ok = :ranch_tcp.controlling_process(tcp_socket, self)
+    :ok = :ranch_tcp.controlling_process(tcp_socket, self())
     state = %{tcp_transport: :ranch_tcp, tcp_socket: tcp_socket, sender: sender, ref: 0}
     :gen_server.enter_loop(__MODULE__, [], state)
   end
