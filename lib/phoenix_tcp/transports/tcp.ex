@@ -60,7 +60,6 @@ defmodule PhoenixTCP.Transports.TCP do
   @doc false
   def tcp_init({socket, config}) do
     Process.flag(:trap_exit, true)
-    serializer = Keyword.fetch!(config, :serializer)
     timeout    = Keyword.fetch!(config, :timeout)
 
     if socket.id, do: socket.endpoint.subscribe(self(), socket.id, link: true)
@@ -68,7 +67,7 @@ defmodule PhoenixTCP.Transports.TCP do
     {:ok, %{socket: socket,
             channels: %{},
             channels_inverse: %{},
-            serializer: serializer}, timeout}
+            serializer: socket.serializer}, timeout}
   end
 
   def tcp_handle(payload, state) do
